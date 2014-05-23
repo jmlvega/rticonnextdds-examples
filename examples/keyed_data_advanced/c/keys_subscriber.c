@@ -341,10 +341,9 @@ static int subscriber_main(int domainId, int sample_count)
     int count = 0;
     struct DDS_Duration_t poll_period = {1,0};
 
-    /* If you want to set the DataReader QoS settings
-    * programmatically rather than using the XML, you will need to add
-    * the following line to your code
-    */
+    /* If you want to set the DataReader QoS settings programmatically rather
+     * than using the XML, you will need to add the following line to your code:
+     */
     /*struct DDS_DataReaderQos datareader_qos = DDS_DataReaderQos_INITIALIZER;*/
 
     /* To customize participant QoS, use 
@@ -412,40 +411,39 @@ static int subscriber_main(int domainId, int sample_count)
         subscriber, DDS_Topic_as_topicdescription(topic),
         &DDS_DATAREADER_QOS_DEFAULT, &reader_listener, DDS_STATUS_MASK_ALL);
 
-        /* If you want to set the QoS settings
-        * programmatically rather than using the XML, you will need to add
-        * the following lines to your code and comment out the create_datareader
-        * call above.
-        */
+    /* If you want to set the QoS settings programmatically rather than using
+     * the XML, you will need to add the following lines to your code and
+     * comment out the create_datareader call above.
+     */
 
-        /*
-        retcode = DDS_Subscriber_get_default_datareader_qos(subscriber, &datareader_qos);
-        if (retcode != DDS_RETCODE_OK) {
-        printf("get_default_datareader_qos error\n");
+    /*
+    retcode = DDS_Subscriber_get_default_datareader_qos(subscriber, &datareader_qos);
+    if (retcode != DDS_RETCODE_OK) {
+    printf("get_default_datareader_qos error\n");
+    return -1;
+    }
+
+    datareader_qos.ownership.kind = DDS_EXCLUSIVE_OWNERSHIP_QOS;
+
+    reader = DDS_Subscriber_create_datareader(
+    subscriber, DDS_Topic_as_topicdescription(topic),
+    &datareader_qos, &reader_listener, DDS_STATUS_MASK_ALL);
+    */
+
+    if (reader == NULL) {
+        printf("create_datareader error\n");
+        subscriber_shutdown(participant);
         return -1;
-        }
+    }
 
-        datareader_qos.ownership.kind = DDS_EXCLUSIVE_OWNERSHIP_QOS;
+    /* Main loop */
+    for (count=0; (sample_count == 0) || (count < sample_count); ++count) {
+        //printf("keys subscriber sleeping for %d sec...\n",poll_period.sec);
+        NDDS_Utility_sleep(&poll_period);
+    }
 
-        reader = DDS_Subscriber_create_datareader(
-        subscriber, DDS_Topic_as_topicdescription(topic),
-        &datareader_qos, &reader_listener, DDS_STATUS_MASK_ALL);
-        */
-
-        if (reader == NULL) {
-            printf("create_datareader error\n");
-            subscriber_shutdown(participant);
-            return -1;
-        }
-
-        /* Main loop */
-        for (count=0; (sample_count == 0) || (count < sample_count); ++count) {
-            //printf("keys subscriber sleeping for %d sec...\n",poll_period.sec);
-            NDDS_Utility_sleep(&poll_period);
-        }
-
-        /* Cleanup and delete all entities */ 
-        return subscriber_shutdown(participant);
+    /* Cleanup and delete all entities */
+    return subscriber_shutdown(participant);
 }
 
 #if defined(RTI_WINCE)

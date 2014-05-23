@@ -394,10 +394,9 @@ public class keysSubscriber
             reader_listener,
             DDS.StatusMask.STATUS_MASK_ALL);
 
-        /* If you want to set the QoS settings
-         * programmatically rather than using the XML, you will need to add
-         * the following lines to your code and comment out the create_datareader
-         * call above.
+        /* If you want to set the QoS settings programmatically rather than
+         * using the XML, you will need to add the following lines to your code
+         * and comment out the create_datareader call above.
          */
         /*
         DDS.DataReaderQos readerQos = new DDS.DataReaderQos();
