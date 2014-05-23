@@ -412,7 +412,7 @@ static int subscriber_main(int domainId, int sample_count)
         subscriber, DDS_Topic_as_topicdescription(topic),
         &DDS_DATAREADER_QOS_DEFAULT, &reader_listener, DDS_STATUS_MASK_ALL);
 
-        /* If you want to set the writer_data_lifecycle QoS settings
+        /* If you want to set the QoS settings
         * programmatically rather than using the XML, you will need to add
         * the following lines to your code and comment out the create_datareader
         * call above.
